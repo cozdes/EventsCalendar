@@ -12,16 +12,20 @@ public enum MonthTitleStyle {
     case full, short, veryShort
     
     var symbols: [String] {
+        var calendar = Calendar.current
+        calendar.locale = CalendarConfig.locale
         switch self {
-        case .full: return Calendar.current.monthSymbols
-        case .short: return Calendar.current.shortMonthSymbols
-        case .veryShort: return Calendar.current.veryShortMonthSymbols
+        
+        case .full: return calendar.monthSymbols
+        case .short: return calendar.shortMonthSymbols
+        case .veryShort: return calendar.veryShortMonthSymbols
         }
     }
 }
 
 
 struct Constant {
+    
     static let numberOfDaysInWeek = 7
     static let numberOfMaximumWeeks = 6
 }
@@ -74,7 +78,7 @@ public protocol CalendarViewConfig: CellDimensionConfig {
 public struct CalendarConfig: CalendarViewConfig, WeekTitleViewConfig, MonthTitleViewConfig {
     
     public static let `default`: CalendarConfig = CalendarConfig()
-    
+    public static var locale : Locale = Locale(identifier: "en")
     public var backgroundColor: UIColor
     
     public var selectionColor: UIColor
@@ -210,3 +214,15 @@ class Utils {
     }
     
 }
+
+
+
+
+
+
+
+
+
+
+
+

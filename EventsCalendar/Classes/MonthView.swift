@@ -124,21 +124,25 @@ public class MonthView: UIView {
                 if !isOtherMonthDate && selectedDate?.isSameAsMonth(date: monthStartDate, calendar: calendar) ?? false {
                     
                     isSelectedDate = true
-                    let minDimension = min(cellWidth, cellHeight)
-                    let diameter =  0.92 * minDimension
-                    let rectangleGrid = CGRect(
-                        x: originX + ((cellWidth - diameter) / 2),
-                        y: originY + ((cellHeight - diameter) / 2) + 2,
-                        width: diameter,
-                        height: diameter
-                    )
-                    let path = UIBezierPath(
-                        roundedRect: rectangleGrid,
-                        cornerRadius: diameter / 2
-                    )
                     
-                    viewConfiguration.selectionColor.setFill()
-                    path.fill()
+                    if eventDays.contains(blockDayNumber) {
+                        let minDimension = min(cellWidth, cellHeight)
+                        let diameter =  0.92 * minDimension
+                        let rectangleGrid = CGRect(
+                            x: originX + ((cellWidth - diameter) / 2),
+                            y: originY + ((cellHeight - diameter) / 2) + 2,
+                            width: diameter,
+                            height: diameter
+                        )
+                        let path = UIBezierPath(
+                            roundedRect: rectangleGrid,
+                            cornerRadius: diameter / 2
+                        )
+                        
+                        viewConfiguration.selectionColor.setFill()
+                        path.fill()
+                    }
+                    
                 }
             }
             
@@ -172,7 +176,10 @@ public class MonthView: UIView {
             let numberYPos = originY + (cellHeight - pointSize) / 2
             let dateStr = "\(blockDayNumber)"
             
-            let isValidDate = !(viewConfiguration.invalidatePastDates && (isOtherMonthDate || isLessThanToday))
+            var isValidDate = !(viewConfiguration.invalidatePastDates && (isOtherMonthDate || isLessThanToday))
+            if !eventDays.contains(blockDayNumber) {
+                isValidDate = false
+            }
             
             func isWeekend(_ blockNum: Int) -> Bool {
                 if blockNum % Constant.numberOfDaysInWeek == 0 {
